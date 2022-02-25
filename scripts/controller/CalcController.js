@@ -2,37 +2,67 @@ class CalcController{
 
     constructor(){
 
-        this._displaycalc = '0';
+        this._locale = 'pt-BR';
+        this._displaycalcEl = document.querySelector('#display');
+        this._dateEl = document.querySelector('#data');
+        this._timeEl = document.querySelector('#hora');
         this._currentDate;
         this.initialize();
     }
 
     initialize(){
 
-        let displaycalcEl = document.querySelector('#display');
-        let dateEl = document.querySelector('#data');
-        let timeEl = document.querySelector('#hora');
+        this.setDisplayDateTime();
 
-        displaycalcEl.innerHTML ="1325";
-        dateEl.innerHTML ="25/02/2022";
-        timeEl.innerHTML ="11:20";
+        setInterval(() => {
+            
+            this.displayDate = this.currentDate.toLocaleDateString(this._locale,{
+                day: '2-digit',
+                month: 'short',
+                year: "numeric"
+            });
+            this.displayTime = this.currentDate.toLocaleTimeString(this._locale);
+
+        }, 1000);
 
     }
+
+    setDisplayDateTime(){
+
+        this.displayDate = this.currentDate.toLocaleDateString(this._locale);
+        this.displayTime = this.currentDate.toLocaleTimeString(this._locale);
+    }
+
+    get displayDate(){
+        return this._dateEl.innerHTML;
+    }
+
+    set displayDate(value){
+        return this._dateEl.innerHTML = value;
+    }
+
+    get displayTime(){
+        return this._timeEl.innerHTML;  
+    }
+
+    set displayTime(value){
+        return this._timeEl.innerHTML = value;
+    }
+
     get displaycalc(){
-
-        return this._displaycalc;
+        return this._displaycalcEl.innerHTML;
     }
 
-    set displaycalc(valor){
-        this._displaycalc = valor;
+    set displaycalc(value){
+        this._displaycalcEl.innerHTML = value;
     }
 
     get currentDate(){
-        return this.currentDate;
+        return new Date();
     }
 
-    set currentDate(date){
-        this._currentDate = date;
+    set currentDate(value){
+        this._currentDate = value;
     }
 
 }
