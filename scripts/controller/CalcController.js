@@ -16,21 +16,27 @@ class CalcController{
 
         setInterval(() => {
             
-            this.displayDate = this.currentDate.toLocaleDateString(this._locale,{
-                day: '2-digit',
-                month: 'short',
-                year: "numeric"
-            });
-            this.displayTime = this.currentDate.toLocaleTimeString(this._locale);
+            this.setDisplayDateTime();
 
         }, 1000);
 
     }
 
+    initButtonsEvents(){
+
+        let buttons = document.querySelectorAll("#buttons > g, #parts > g");
+
+    }
+
     setDisplayDateTime(){
 
-        this.displayDate = this.currentDate.toLocaleDateString(this._locale);
+        this.displayDate = this.currentDate.toLocaleDateString(this._locale,{
+            day: '2-digit',
+            month: 'short',
+            year: "numeric"
+        });
         this.displayTime = this.currentDate.toLocaleTimeString(this._locale);
+
     }
 
     get displayDate(){
