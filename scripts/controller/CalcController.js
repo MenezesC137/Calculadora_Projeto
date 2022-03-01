@@ -4,7 +4,7 @@ class CalcController{
 
         this._operation = [];
         this._locale = 'pt-BR';
-        this._displaycalcEl = document.querySelector('#display');
+        this._displayCalcEl = document.querySelector('#display');
         this._dateEl = document.querySelector('#data');
         this._timeEl = document.querySelector('#hora');
         this._currentDate;
@@ -23,6 +23,8 @@ class CalcController{
 
         }, 1000);
 
+        this.setLastNumberToDisplay();
+
     }
 
     addEventListenerAll(element, events, fn){
@@ -39,26 +41,139 @@ class CalcController{
 
         this._operation = [];
 
+        this.setLastNumberToDisplay();
+
     }
     
     clearEntry(){
 
         this._operation.pop();
 
+        this.setLastNumberToDisplay();
+
     }
     setError(){
 
-        this.displaycalc = 'Error';
+        this.displayCalc = 'Error';
+
+    }
+
+    getlastOperation(){
+
+        return this._operation[this._operation.length-1];
+    
+    }
+
+    setLastOperation(value){
+
+        this._operation[this._operation.length-1] = value;
+
+    }
+
+    isOperator(value) {
+
+       return (['+', '-', '*', '%', '/'].indexOf(value) > -1);
+
+    }
+
+    pushOperation(value) {
+
+        this._operation.push(value);
+
+        if (this._operation.length > 3) {
+
+            this.calc();
+
+        }
+
+    }
+
+    calc(){
+
+        let last = '';
+
+        if (this._operation.length > 3){
+            last = this._operation.pop();
+
+        }
+
+        let result = eval(this._operation.join(''));
+
+        if (last == '%') {
+
+            result /= 100;
+
+            this._operation = [result];
+            
+
+        } else {
+
+            this._operation = [result];
+
+            if (last) this._operation.push(last);
+
+        }
+
+        this.setLastNumberToDisplay();
+
+    }
+
+    setLastNumberToDisplay(){
+
+        let lastNumber;
+
+        for(let i = this._operation.length -1; i >= 0; i--){
+
+            if (!this.isOperator(this._operation[i])) {
+                lastNumber = this._operation[i];
+                break;
+            }
+
+        }
+
+        if (!lastNumber) lastNumber = 0;
+
+        this.displayCalc = lastNumber;
 
     }
 
     addOperation(value){
 
-        this._operation.push(value);
+        if (isNaN(this.getlastOperation())) {
 
-        console.log(this._operation);
+            if (this.isOperator(value)) {
+
+                this.setLastOperation(value);
+
+            } else if (isNaN(value)){
+
+                console.log('outra coisa', value);
+
+            } else {
+
+                this.pushOperation(value);
+
+                this.setLastNumberToDisplay();
+
+            }
+
+        } else {
+
+            if (this.isOperator(value)) {
+
+                this.pushOperation(value);
+
+            } else {
+
+                let newValue = this.getlastOperation().toString() + value.toString();
+                this.setLastOperation(parseInt(newValue));
+           
+                this.setLastNumberToDisplay();
+            }
+        }
 
     }
+
     execBtn(value) {
 
         switch (value) {
@@ -70,22 +185,26 @@ class CalcController{
                 this.clearEntry();
                 break;
             case 'soma':
-                this.
+                this.addOperation('+');
                 break;
             case 'subtracao':
-                
+                this.addOperation('-');
                 break;
             case 'divisao':
-                
+                this.addOperation('/');
                 break;
             case 'multiplicacao':
-                
+                this.addOperation('*');
                 break;
             case 'porcento':
-                
+                this.addOperation('%');
                 break;
             case 'igual':
-                
+                this.calc();
+                break;
+
+            case 'ponto':
+                this.addOperation('.');
                 break;
 
             case '0':
@@ -158,12 +277,12 @@ class CalcController{
         return this._timeEl.innerHTML = value;
     }
 
-    get displaycalc(){
-        return this._displaycalcEl.innerHTML;
+    get displayCalc(){
+        return this._displayCalcEl.innerHTML;
     }
 
-    set displaycalc(value){
-        this._displaycalcEl.innerHTML = value;
+    set displayCalc(value){
+        this._displayCalcEl.innerHTML = value;
     }
 
     get currentDate(){
