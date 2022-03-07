@@ -256,10 +256,7 @@ class CalcController {
           this._lastNumber = this.getLastItem(false);
  
        }
-/*
-           console.log('_lastOperator', this._lastOperator);
-           console.log('lastNumber', this._lastNumber);
-*/   
+
        let result = this.getResult();
  
  
@@ -395,7 +392,7 @@ class CalcController {
           case '7':
           case '8':
           case '9':
-             this.addOperation(parseInt(value));
+             this.addOperation(parseFloat(value));
              break;
  
  
