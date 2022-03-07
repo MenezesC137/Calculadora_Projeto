@@ -1,5 +1,5 @@
 class CalcController {
-    //construtor onde fica os principais objetos
+    // Principais objetos
     constructor() {
 
        this._audio = new Audio('click.mp3');
@@ -100,7 +100,7 @@ class CalcController {
              case '7':
              case '8':
              case '9':
-                this.addOperation(parseInt(e.key));
+                this.addOperation(parseaFloat(e.key));
                 break;
              case 'c':
                 if (e.ctrlKey) this.copyToClipboard();
@@ -226,8 +226,12 @@ class CalcController {
     }
  
     getResult() {
- 
+
+      try {
        return eval(this._operation.join(""));
+      } catch (e) {
+         setTimeout(() => this.setError(), 1);
+      }
  
     }
  
@@ -318,7 +322,8 @@ class CalcController {
     }
  
     setError() {
-       this.displayCalc = "Erro";
+       console.log(setError);
+       this.displayCalc = "Error";
     }
  
     addDot() {
@@ -394,12 +399,10 @@ class CalcController {
           case '9':
              this.addOperation(parseFloat(value));
              break;
- 
- 
+
           default:
              this.setError();
              break;
- 
        }
     }
  
@@ -412,9 +415,9 @@ class CalcController {
  
           this.addEventListenerAll(btn, "click drag", e => {
  
-             let textbtn = btn.className.baseVal.replace("btn-", "");
- 
-             this.execBtn(textbtn);
+            let textbtn = btn.className.baseVal.replace("btn-", "");
+
+            this.execBtn(textbtn);
           })
  
           this.addEventListenerAll(btn, "mouseover mouseup mousedown", e => {
@@ -452,7 +455,8 @@ class CalcController {
     set displayCalc(value) {
  
        if (value.toString().length > 10) {
-          this.setError(); return
+         this.setError(); 
+         return false;
        }
        this._displayCalcEl.innerHTML = value;
     }
